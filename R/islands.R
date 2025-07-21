@@ -134,6 +134,88 @@ get_island_metrics <- function(code, start_date, end_date, interval = "day") {
 
 #' Helper function to handle NULL values
 #' @noRd
+#' Get all islands with pagination support
+#'
+#' @param max_pages Maximum number of pages to fetch (default: 10)
+#' @param page_size Number of islands per page (default: 100)
+#'
+#' @return A tibble with all island data
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' # Get all islands (up to 1000)
+#' all_islands <- get_all_islands()
+#' 
+#' # Get more islands
+#' many_islands <- get_all_islands(max_pages = 20)
+#' }
+get_all_islands <- function(max_pages = 10, page_size = 100) {
+  all_data <- list()
+  next_cursor <- NULL
+  pages_fetched <- 0
+  
+  message("Fetching islands data...")
+  
+  while (pages_fetched < max_pages) {
+    # Create request
+    req <- fortnite_request("islands")
+    
+    # Add pagination parameters
+    if (!is.null(next_cursor)) {
+      req <- req |> httr2::req_url_query(after = next_cursor, size = page_size)
+    } else {
+      req <- req |> httr2::req_url_query(size = page_size)
+    }
+    
+    # Make request
+    resp <- req |> 
+      httr2::req_perform() |>
+      httr2::resp_body_json()
+    
+    # Extract data
+    if (length(resp$data) == 0) {
+      break
+    }
+    
+    # Parse this page's data
+    page_data <- resp$data |>
+      purrr::map_df(~ {
+        tibble::tibble(
+          island_code = .x$code %||% NA_character_,
+          island_name = .x$title %||% NA_character_,
+          creator_name = .x$creatorCode %||% NA_character_,
+          created_in = .x$createdIn %||% NA_character_,
+          category = .x$category %||% NA_character_,
+          tags = list(.x$tags %||% character(0))
+        )
+      })
+    
+    all_data[[length(all_data) + 1]] <- page_data
+    pages_fetched <- pages_fetched + 1
+    
+    # Check for next page
+    next_cursor <- resp$meta$page$nextCursor
+    if (is.null(next_cursor)) {
+      break
+    }
+    
+    message(sprintf("Fetched page %d (%d islands)...", pages_fetched, nrow(page_data)))
+  }
+  
+  # Combine all pages
+  if (length(all_data) == 0) {
+    return(tibble::tibble())
+  }
+  
+  result <- dplyr::bind_rows(all_data)
+  message(sprintf("Total islands fetched: %d", nrow(result)))
+  
+  return(result)
+}
+
+#' Helper function to handle NULL values
+#' @noRd
 `%||%` <- function(x, y) {
   if (is.null(x)) y else x
 }

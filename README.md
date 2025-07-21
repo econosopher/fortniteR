@@ -27,6 +27,9 @@ library(fortniteR)
 # Get list of islands
 islands <- get_islands(limit = 50)
 
+# Get all islands with pagination (up to 1000)
+all_islands <- get_all_islands()
+
 # Get specific island metadata
 island_info <- get_island_metadata("XXXX-XXXX-XXXX")
 
