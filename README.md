@@ -45,9 +45,11 @@ See `scripts/top_islands_gt_table.R` for a complete example of fetching data and
 
 ### Example Output
 
-Here's an example of a GT table generated using the package:
+Here's an example of a GT table generated using mock data to demonstrate visualization capabilities:
 
 ![Top 10 Fortnite Islands Table](output/mock_top_10_islands.png)
+
+*Note: This mock example shows hypothetical performance metrics. The actual API provides basic island information including name, code, creator, and play counts.*
 
 ### Fetching Real Island Data
 

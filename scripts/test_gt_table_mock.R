@@ -47,7 +47,7 @@ island_details <- tibble(
 gt_table <- island_details |>
   gt() |>
   tab_header(
-    title = "Top 10 Fortnite Islands - Weekly Performance Metrics",
+    title = "Top 10 Fortnite Islands - Mock Performance Metrics",
     subtitle = glue("Mock data demonstration - {format(Sys.Date(), '%B %d, %Y')}")
   ) |>
   cols_label(
