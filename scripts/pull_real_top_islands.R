@@ -1,11 +1,15 @@
-library(fortniteR)
-library(dplyr)
-library(gt)
-library(ggplot2)
+# Load packages using pacman
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(fortniteR, dplyr, gt, ggplot2)
+
+# Create output directory if it doesn't exist
+if (!dir.exists("output")) {
+  dir.create("output")
+}
 
 # Get the featured islands from the public API
-message("Fetching featured Fortnite Creative islands from API...")
-top_islands <- get_top_islands()
+message("Fetching Fortnite Creative islands from API...")
+top_islands <- get_islands(limit = 10)
 
 # Display the data
 print(top_islands)
@@ -37,7 +41,7 @@ gt_table <- top_islands %>%
   opt_interactive()
 
 # Save the table
-gtsave(gt_table, "/Users/phillip/Documents/vibe_coding_projects/fortniteR/output/real_top_10_islands.html")
+gtsave(gt_table, "output/real_top_10_islands.html")
 
 # Create a simple visualization showing island names
 if (nrow(top_islands) > 0) {
@@ -68,7 +72,7 @@ if (nrow(top_islands) > 0) {
   
   # Save the plot
   ggsave(
-    "/Users/phillip/Documents/vibe_coding_projects/fortniteR/output/real_top_10_islands_chart.png",
+    "output/real_top_10_islands_chart.png",
     plot = p,
     width = 10,
     height = 6,
@@ -76,21 +80,7 @@ if (nrow(top_islands) > 0) {
   )
 }
 
-# Also try to get discovery islands from FortniteAPI.io
-tryCatch({
-  message("\nAttempting to fetch discovery islands...")
-  discovery_islands <- get_discovery_islands()
-  
-  if (nrow(discovery_islands) > 0) {
-    message(paste("Found", nrow(discovery_islands), "discovery islands"))
-    print(head(discovery_islands, 10))
-    
-    # Save discovery data
-    saveRDS(discovery_islands, "/Users/phillip/Documents/vibe_coding_projects/fortniteR/output/discovery_islands.rds")
-  }
-}, error = function(e) {
-  message("Could not fetch discovery islands: ", e$message)
-})
+# Note: Additional discovery endpoints could be added in future versions
 
 message("\nData fetched and visualizations created successfully!")
 message("Files saved to output/ directory")

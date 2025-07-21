@@ -7,11 +7,12 @@ R client for the Fortnite Ecosystem API, providing access to island metadata and
 ## Installation
 
 ```r
-# Install from local directory
-devtools::install(".")
+# Install from GitHub
+devtools::install_github("econosopher/fortniteR")
 
-# Or load for development
-devtools::load_all(".")
+# Or using pacman
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load_gh("econosopher/fortniteR")
 ```
 
 ## Usage
@@ -47,6 +48,34 @@ See `scripts/top_islands_gt_table.R` for a complete example of fetching data and
 Here's an example of a GT table generated using the package:
 
 ![Top 10 Fortnite Islands Table](output/mock_top_10_islands.png)
+
+### Fetching Real Island Data
+
+The package includes a script (`scripts/pull_real_top_islands.R`) that demonstrates fetching real data from the Fortnite API:
+
+```r
+# Load packages using pacman
+if (!require(pacman)) install.packages("pacman")
+pacman::p_load(fortniteR, dplyr, gt, ggplot2)
+
+# Fetch top islands from the API
+top_islands <- get_islands(limit = 10)
+
+# Create a GT table with the data
+gt_table <- top_islands %>%
+  select(island_code, island_name, description) %>%
+  gt() %>%
+  tab_header(
+    title = "Featured Fortnite Creative Islands",
+    subtitle = paste("Popular islands as of", Sys.Date())
+  )
+```
+
+This script will:
+- Fetch current island data from the Fortnite Ecosystem API
+- Create a formatted GT table
+- Generate a visualization chart
+- Save outputs to the `output/` directory
 
 ## Features
 

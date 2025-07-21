@@ -14,10 +14,7 @@ pacman::p_load(
 # Load the package functions
 devtools::load_all(".")
 
-# Check for credentials
-if (!has_fortnite_auth()) {
-  stop("Please set FORTNITE_CLIENT_ID and FORTNITE_CLIENT_SECRET environment variables")
-}
+# No authentication required - the API is public!
 
 # Fetch the first batch of islands
 message("Fetching island data...")
