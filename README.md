@@ -30,12 +30,12 @@ islands <- get_islands(limit = 50)
 # Get specific island metadata
 island_info <- get_island_metadata("XXXX-XXXX-XXXX")
 
-# Get island metrics
+# Get island metrics (plays, retention, etc.)
 metrics <- get_island_metrics(
   code = "XXXX-XXXX-XXXX",
   start_date = Sys.Date() - 7,
   end_date = Sys.Date(),
-  interval = "day"
+  interval = "day"  # Options: "minute", "hour", "day"
 )
 ```
 
@@ -45,15 +45,17 @@ See `scripts/top_islands_gt_table.R` for a complete example of fetching data and
 
 ### Example Output
 
-Here's an example of a GT table generated using mock data to demonstrate visualization capabilities:
+Here's an example of a GT table generated using real data from the Fortnite Ecosystem API:
 
-![Top 10 Fortnite Islands Table](output/mock_top_10_islands.png)
+![Top 10 Fortnite Islands Table](output/real_top_10_islands.png)
 
-*Note: This mock example shows hypothetical performance metrics. The actual API provides basic island information including name, code, creator, and play counts.*
+*This table shows actual islands retrieved from the API, displaying island codes, names, creators, platforms (UEFN/FNC), and categories.*
 
 ### Fetching Real Island Data
 
-The package includes a script (`scripts/pull_real_top_islands.R`) that demonstrates fetching real data from the Fortnite API:
+The package includes scripts that demonstrate fetching real data from the Fortnite API:
+- `scripts/generate_real_top_islands.R` - Creates the GT table shown above with current island data
+- `scripts/pull_real_top_islands.R` - Fetches islands and creates various visualizations
 
 ```r
 # Load packages using pacman
@@ -88,9 +90,15 @@ This script will:
 - Create beautiful GT tables with metrics
 - No authentication required
 
+## API Endpoints
+
+- `/islands` - Returns basic island metadata (code, name, creator, platform, tags)
+- `/islands/{code}` - Returns detailed metadata for a specific island
+- `/islands/{code}/metrics` - Returns engagement metrics (plays, retention, etc.)
+
 ## API Limitations
 
-- Historical data limited to 7 days
+- Historical metrics data limited to 7 days
 - Only public/discoverable islands available
-- Minimum 5 unique players required for data
+- Minimum 5 unique players required for metrics data
 - Some Epic games don't support favorites/recommendations

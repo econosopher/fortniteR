@@ -40,8 +40,8 @@ gt_table <- top_islands %>%
   ) %>%
   opt_interactive()
 
-# Save the table
-gtsave(gt_table, "output/real_top_10_islands.html")
+# Save the table as PNG only
+gtsave(gt_table, "output/real_top_10_islands.png", vwidth = 1400, vheight = 600)
 
 # Create a simple visualization showing island names
 if (nrow(top_islands) > 0) {

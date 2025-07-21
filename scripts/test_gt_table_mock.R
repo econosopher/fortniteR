@@ -146,12 +146,11 @@ gt_table <- island_details |>
     table.width = pct(100)
   )
 
-# Save the table
+# Save the table as PNG only
 dir.create("output", showWarnings = FALSE)
-gtsave(gt_table, "output/mock_top_10_islands.html")
 gtsave(gt_table, "output/mock_top_10_islands.png", vwidth = 1400, vheight = 600)
 
-message("Mock GT table saved to output/mock_top_10_islands.html and .png")
+message("Mock GT table saved to output/mock_top_10_islands.png")
 
 # Display the table
 gt_table

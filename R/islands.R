@@ -28,22 +28,19 @@ get_islands <- function(limit = 50, offset = 0, order_by = "plays", order = "des
     httr2::resp_body_json()
   
   # Parse results
-  if (length(resp$islands) == 0) {
+  if (length(resp$data) == 0) {
     return(tibble::tibble())
   }
   
-  islands_data <- resp$islands |>
+  islands_data <- resp$data |>
     purrr::map_df(~ {
       tibble::tibble(
         island_code = .x$code %||% NA_character_,
-        island_name = .x$name %||% NA_character_,
-        description = .x$description %||% NA_character_,
-        creator_name = .x$creatorName %||% NA_character_,
-        is_featured = .x$isFeatured %||% FALSE,
-        is_favorite = .x$isFavorite %||% FALSE,
-        image_url = .x$imageUrl %||% NA_character_,
-        total_plays = .x$totalPlays %||% NA_integer_,
-        last_played = if (!is.null(.x$lastPlayed)) as.POSIXct(.x$lastPlayed) else NA
+        island_name = .x$title %||% NA_character_,
+        creator_name = .x$creatorCode %||% NA_character_,
+        created_in = .x$createdIn %||% NA_character_,
+        category = .x$category %||% NA_character_,
+        tags = list(.x$tags %||% character(0))
       )
     })
   
